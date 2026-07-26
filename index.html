@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cairn — your team's memory for every decision</title>
+<meta name="description" content="Log why you decided something, once. Ask Cairn anytime after and get a real answer, not a scavenger hunt through Slack.">
+<link rel="icon" href="assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body class="reveal-ready">
+
+<div class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo"><img src="assets/logo.svg" alt="" width="26" height="26"><span class="logo-word">Cairn</span></a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="nav-right">
+      <a href="app.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="app.html?signup=1" class="btn btn-primary btn-sm">Start free</a>
+      <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <a href="#how">How it works</a>
+  <a href="#features">Features</a>
+  <a href="#pricing">Pricing</a>
+  <a href="app.html" class="btn btn-ghost" style="margin-top:20px;">Sign in</a>
+  <a href="app.html?signup=1" class="btn btn-primary">Start free</a>
+</div>
+
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="eyebrow" data-reveal><span class="dot"></span> Built for small teams that move fast</div>
+      <h1 data-reveal class="d1">Your team's memory for every <em>important decision.</em></h1>
+      <p class="lead" data-reveal class="d2">Log the "why" behind a decision once — 30 seconds. Ask Cairn "why did we…?" any time after, and get a real answer with sources, not a scroll through old Slack threads.</p>
+      <div class="hero-cta" data-reveal class="d3">
+        <a href="app.html?signup=1" class="btn btn-primary btn-lg">Start free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+      </div>
+      <p class="hero-note" data-reveal class="d3">No credit card. 2 minutes to set up. Built for teams of 2–20.</p>
+    </div>
+
+    <div class="ask-preview" data-reveal class="d3">
+      <div class="ask-preview-q">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 17h.01"/><path d="M9.1 9a2.9 2.9 0 0 1 5.6 1c0 1.9-2.7 2.3-2.7 4.2"/><circle cx="12" cy="12" r="9.5"/></svg>
+        <span>Why did we move off the flat pricing model?</span>
+      </div>
+      <div class="ask-preview-a">
+        You switched to usage-based pricing in <b>March</b> because flat pricing under-charged
+        your top 5% of accounts while over-charging casual users — churn on the low end
+        was 3× higher than on the high end.
+        <div>
+          <span class="ask-preview-cite"><span class="dot"></span>Pricing model change — Mar 12</span>
+          <span class="ask-preview-cite"><span class="dot"></span>Churn review Q1 — Mar 3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div class="eyebrow"><span class="dot"></span> The problem</div>
+      <h2>Your decisions already exist. You just can't find them.</h2>
+      <p>They're scattered across Slack threads that scroll away, Notion pages nobody
+        reopens, and the one person who happens to remember — until they don't, or
+        until they leave.</p>
+    </div>
+    <div class="cols-3">
+      <div class="mini-card" data-reveal>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 8h18M7 12h4"/></svg>
+        <h3>Buried in chat</h3>
+        <p>The reasoning lives in a thread from four months ago that nobody can search for, because nobody remembers the exact words used.</p>
+      </div>
+      <div class="mini-card" data-reveal class="d1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10v18l-5-3-5 3Z"/></svg>
+        <h3>Written once, read never</h3>
+        <p>Someone writes a beautiful Notion doc. Three weeks later nobody remembers it exists — so the same debate happens again.</p>
+      </div>
+      <div class="mini-card" data-reveal class="d2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
+        <h3>Tribal memory walks out the door</h3>
+        <p>The "why" behind a decision lives in one person's head. When they're out sick, on leave, or leave the company — it's gone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div class="eyebrow"><span class="dot"></span> How it works</div>
+      <h2>Three steps. No new habit to build.</h2>
+      <p>Cairn isn't another tool your team has to remember to open. It fits in the gaps between the tools you already use.</p>
+    </div>
+    <div class="steps">
+      <div class="step" data-reveal>
+        <div class="step-num">1</div>
+        <h3>Log the decision</h3>
+        <p>Title, context, and the actual reasoning — 30 seconds after you decide something, while it's still fresh.</p>
+      </div>
+      <div class="step" data-reveal class="d1">
+        <div class="step-num">2</div>
+        <h3>It joins your team's memory</h3>
+        <p>Every decision is tagged, timestamped, and instantly searchable by anyone on the team — forever.</p>
+      </div>
+      <div class="step" data-reveal class="d2">
+        <div class="step-num">3</div>
+        <h3>Ask Cairn anything</h3>
+        <p>"Why did we drop feature X?" Cairn reads your team's whole decision history and answers in plain language, with sources.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div class="eyebrow"><span class="dot"></span> Features</div>
+      <h2>Small enough to actually use daily.</h2>
+      <p>No workflow to learn, no admin console to configure. Built for teams of two people, and it still holds up at twenty.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature wide" data-reveal>
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 17h.01"/><path d="M9.1 9a2.9 2.9 0 0 1 5.6 1c0 1.9-2.7 2.3-2.7 4.2"/><circle cx="12" cy="12" r="9.5"/></svg></div>
+        <h3>Ask Cairn</h3>
+        <p>Type a question in plain English. Cairn searches your team's entire decision history and answers with the reasoning — plus links to the source decisions it used.</p>
+      </div>
+      <div class="feature" data-reveal class="d1">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></div>
+        <h3>Instant capture</h3>
+        <p>One shortcut, one form. Log a decision faster than you could type a Slack message about it.</p>
+      </div>
+      <div class="feature" data-reveal class="d2">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12.6 2.6H4.4a1.8 1.8 0 0 0-1.8 1.8v8.2c0 .48.19.94.53 1.27l9.4 9.4c.7.7 1.83.7 2.54 0l7.13-7.13c.7-.7.7-1.84 0-2.54l-9.4-9.4a1.8 1.8 0 0 0-1.27-.53Z"/><path d="M7.6 7.6h.01"/></svg></div>
+        <h3>Tags & categories</h3>
+        <p>Product, pricing, hiring, ops — organize decisions your way, and filter your whole history in one click.</p>
+      </div>
+      <div class="feature" data-reveal class="d3">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg></div>
+        <h3>Clear timeline</h3>
+        <p>Scroll through your company's own history, month by month. It's oddly satisfying to watch it grow.</p>
+      </div>
+      <div class="feature wide" data-reveal class="d3">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.2a4 4 0 0 1 8 0v3.3"/></svg></div>
+        <h3>Your data, your workspace</h3>
+        <p>No public sharing, no scraping your Slack. A private workspace your team joins with an invite code — nothing more.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div class="eyebrow"><span class="dot"></span> Pricing</div>
+      <h2>Free while we're in beta.</h2>
+      <p>Cairn is early. Team pricing kicks in once we're out of beta — early workspaces keep a discount for life.</p>
+    </div>
+    <div class="pricing">
+      <div class="plan" data-reveal>
+        <div class="plan-name">Free</div>
+        <div class="plan-price">€0<span> / month</span></div>
+        <div class="plan-desc">For getting your team's memory started.</div>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Up to 100 decisions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Up to 3 team members</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Ask Cairn (AI search)</li>
+        </ul>
+        <a href="app.html?signup=1" class="btn btn-ghost btn-block">Start free</a>
+      </div>
+      <div class="plan highlight" data-reveal class="d1">
+        <div class="plan-name">Team — beta</div>
+        <div class="plan-price">Free<span> during beta</span></div>
+        <div class="plan-desc">Everything, unlimited. Lock in early pricing.</div>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Unlimited decisions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Unlimited team members</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Priority support</li>
+        </ul>
+        <a href="app.html?signup=1" class="btn btn-primary btn-block">Start free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band" data-reveal>
+      <h2>Stop losing track of "why."</h2>
+      <p>Two minutes to set up. Your first decision is logged before your coffee gets cold.</p>
+      <a href="app.html?signup=1" class="btn btn-primary btn-lg">Start free</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <a href="#" class="logo"><img src="assets/logo.svg" alt="" width="20" height="20"><span class="logo-word">Cairn</span></a>
+    <nav><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="app.html">Sign in</a></nav>
+    <div class="footer-note">A SP Industries product.</div>
+  </div>
+</footer>
+
+<script src="assets/landing.js?v=1"></script>
+</body>
+</html>

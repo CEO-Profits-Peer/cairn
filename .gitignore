@@ -1,0 +1,7 @@
+.claude/
+.secrets/
+*.pwd
+pwd.txt
+.vercel
+.DS_Store
+node_modules/

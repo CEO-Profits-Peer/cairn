@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cairn</title>
+<link rel="icon" href="assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body class="app-body">
+
+<!-- ============ AUTH ============ -->
+<div id="authScreen" class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo"><img src="assets/logo.svg" width="26" height="26" alt=""><span>Cairn</span></div>
+
+    <div class="auth-tabs">
+      <button id="tabLogin" class="on" type="button">Sign in</button>
+      <button id="tabSignup" type="button">Sign up</button>
+    </div>
+
+    <div id="authMsg"></div>
+
+    <form id="loginForm">
+      <h1>Welcome back</h1>
+      <p class="sub">Sign in to your workspace.</p>
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="email"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPassword" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+      <p class="auth-switch"><a id="forgotLink">Forgot password?</a></p>
+    </form>
+
+    <form id="signupForm" style="display:none;">
+      <h1>Create your account</h1>
+      <p class="sub">Free while Cairn is in beta.</p>
+      <div class="field"><label>Your name</label><input type="text" id="signupName" required autocomplete="name"></div>
+      <div class="field"><label>Email</label><input type="email" id="signupEmail" required autocomplete="email"></div>
+      <div class="field"><label>Password</label><input type="password" id="signupPassword" required minlength="8" autocomplete="new-password"></div>
+      <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      <p class="auth-note">By continuing you agree this is a small beta product — things may change.</p>
+    </form>
+
+    <form id="resetForm" style="display:none;">
+      <h1>Reset password</h1>
+      <p class="sub">We'll email you a reset link.</p>
+      <div class="field"><label>Email</label><input type="email" id="resetEmail" required autocomplete="email"></div>
+      <button type="submit" class="btn btn-primary btn-block">Send reset link</button>
+      <p class="auth-switch"><a id="backToLogin">Back to sign in</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ============ WORKSPACE GATE (logged in, no workspace) ============ -->
+<div id="wsGate" class="auth-wrap" style="display:none;">
+  <div class="auth-card">
+    <div class="auth-logo"><img src="assets/logo.svg" width="26" height="26" alt=""><span>Cairn</span></div>
+    <h1>Set up your workspace</h1>
+    <p class="sub">Create a new workspace, or join your team's with an invite code.</p>
+    <div id="wsMsg"></div>
+
+    <div class="field"><label>Your name</label><input type="text" id="wsMemberName" placeholder="How your team will see you"></div>
+
+    <div class="field">
+      <label>Create a new workspace</label>
+      <input type="text" id="wsNewName" placeholder="e.g. Acme Inc.">
+    </div>
+    <button id="wsCreateBtn" class="btn btn-primary btn-block" style="margin-bottom:22px;">Create workspace</button>
+
+    <div class="field">
+      <label>...or join with an invite code</label>
+      <input type="text" id="wsJoinCode" placeholder="8-character code">
+    </div>
+    <button id="wsJoinBtn" class="btn btn-ghost btn-block">Join workspace</button>
+
+    <p class="auth-switch"><a id="wsLogout">Sign out</a></p>
+  </div>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="shell" class="shell" style="display:none;">
+  <aside class="sidebar">
+    <div class="side-logo"><img src="assets/logo.svg" width="22" height="22" alt=""><span>Cairn</span></div>
+    <nav class="side-nav">
+      <div class="side-link" data-view="overview" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="11" width="8" height="10" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+        Overview
+      </div>
+      <div class="side-link" data-view="decisions" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
+        Decisions
+      </div>
+      <div class="side-link" data-view="settings" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l1.9-1.5-2-3.4-2.3.7a7.7 7.7 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.3a7.7 7.7 0 0 0-2.6 1.5l-2.3-.7-2 3.4L4.6 10.5a7.6 7.6 0 0 0 0 3l-1.9 1.5 2 3.4 2.3-.7c.77.66 1.65 1.18 2.6 1.5l.4 2.3h4l.4-2.3a7.7 7.7 0 0 0 2.6-1.5l2.3.7 2-3.4Z"/></svg>
+        Settings
+      </div>
+    </nav>
+    <div class="side-foot">
+      <div class="side-ws" id="wsSwitcher">
+        <div class="side-ws-avatar" id="wsAvatar">C</div>
+        <div style="min-width:0;">
+          <div class="side-ws-name" id="wsNameLabel">Workspace</div>
+          <div class="side-ws-sub" id="wsMemberLabel">Signed in</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="mobile-topbar">
+      <div class="logo-mini"><img src="assets/logo.svg" width="20" height="20" alt=""><span>Cairn</span></div>
+      <button class="btn btn-ghost btn-sm" id="mobileSearchBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+    </div>
+
+    <div class="topbar">
+      <div class="topbar-title" id="viewTitle">Overview</div>
+      <div class="topbar-right">
+        <div class="search-trigger" id="searchTrigger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <span>Search or ask...</span>
+          <kbd>⌘K</kbd>
+        </div>
+        <button class="btn btn-primary btn-sm" id="newDecisionBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+          New decision
+        </button>
+      </div>
+    </div>
+
+    <main class="view" id="view"></main>
+
+    <div class="mobile-tabbar">
+      <button data-view="overview" class="on">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="11" width="8" height="10" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+        Overview
+      </button>
+      <button data-view="decisions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
+        Decisions
+      </button>
+      <button data-view="new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        New
+      </button>
+      <button data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l1.9-1.5-2-3.4-2.3.7a7.7 7.7 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.3a7.7 7.7 0 0 0-2.6 1.5l-2.3-.7-2 3.4L4.6 10.5a7.6 7.6 0 0 0 0 3l-1.9 1.5 2 3.4 2.3-.7c.77.66 1.65 1.18 2.6 1.5l.4 2.3h4l.4-2.3a7.7 7.7 0 0 0 2.6-1.5l2.3.7 2-3.4Z"/></svg>
+        Settings
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Decision modal ============ -->
+<div class="overlay hidden" id="decisionModalOverlay">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h2 id="decisionModalTitle">New decision</h2>
+      <button class="modal-close" id="decisionModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Title</label><input type="text" id="dTitle" placeholder="e.g. Switch to usage-based pricing"></div>
+      <div class="field"><label>Context — what was the situation?</label><textarea id="dContext" placeholder="What prompted this decision?"></textarea></div>
+      <div class="field"><label>Reasoning — why this, and not something else?</label><textarea id="dReasoning" placeholder="The actual reasoning — this is what future-you will search for"></textarea></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div class="field">
+          <label>Category</label>
+          <select id="dCategory">
+            <option value="general">General</option>
+            <option value="product">Product</option>
+            <option value="pricing">Pricing</option>
+            <option value="people">People</option>
+            <option value="ops">Ops</option>
+            <option value="finance">Finance</option>
+          </select>
+        </div>
+        <div class="field"><label>Date decided</label><input type="date" id="dDate"></div>
+      </div>
+      <div class="field">
+        <label>Tags</label>
+        <div class="tag-input-box" id="dTagBox"><input type="text" id="dTagInput" placeholder="Type and press Enter"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost foot-left" id="dDeleteBtn" style="display:none; color:var(--danger); border-color:rgba(217,105,90,.3);">Delete</button>
+      <button class="btn btn-ghost" id="decisionCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="decisionSaveBtn">Save decision</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Command palette ============ -->
+<div class="cmdk-overlay hidden" id="cmdkOverlay">
+  <div class="cmdk-box">
+    <div class="cmdk-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="cmdkInput" placeholder="Search decisions, or ask a question...">
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
+<script src="config.js"></script>
+<script src="app.js?v=1" defer></script>
+</body>
+</html>
