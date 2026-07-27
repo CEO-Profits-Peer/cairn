@@ -159,7 +159,8 @@ const supaApi = {
     return data;
   },
   async createDecision(d) {
-    const { data, error } = await sb.from('cairn_decisions').insert(d).select().single();
+    const { data: { user } } = await sb.auth.getUser();
+    const { data, error } = await sb.from('cairn_decisions').insert({ ...d, created_by: user.id }).select().single();
     if (error) throw error;
     return data;
   },
