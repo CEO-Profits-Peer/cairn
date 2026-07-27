@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=3">
-<link rel="stylesheet" href="app.css?v=2">
+<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="app.css?v=3">
 </head>
 <body class="app-body">
 
@@ -174,8 +174,8 @@
         </select>
       </div>
       <div class="field"><label id="dTitleLabel">Title</label><input type="text" id="dTitle" placeholder="e.g. Switch to usage-based pricing"></div>
-      <div class="field" id="dContextField"><label id="dContextLabel">Context — what was the situation?</label><textarea id="dContext" placeholder="What prompted this decision?"></textarea></div>
-      <div class="field"><label id="dReasoningLabel">Reasoning — why this, and not something else?</label><textarea id="dReasoning" placeholder="The actual reasoning — this is what future-you will search for"></textarea></div>
+      <div class="field" id="dContextField"><label id="dContextLabel">Context</label><textarea id="dContext" class="small" placeholder="What prompted this? (optional)"></textarea></div>
+      <div class="field"><label id="dReasoningLabel">Reasoning</label><textarea id="dReasoning" class="main" placeholder="What did you decide, and why?"></textarea></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
         <div class="field" id="dCategoryField">
           <label>Category</label>
@@ -203,6 +203,37 @@
   </div>
 </div>
 
+<!-- ============ Quick tour ============ -->
+<div class="overlay hidden" id="tourOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Welcome to Cairn</h2>
+      <button class="modal-close" id="tourClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="tour-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        <div><b>Log anything</b><span>Decision, note, meeting, glossary term, or link — pick a type, 30 seconds.</span></div>
+      </div>
+      <div class="tour-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 17h.01"/><path d="M9.1 9a2.9 2.9 0 0 1 5.6 1c0 1.9-2.7 2.3-2.7 4.2"/><circle cx="12" cy="12" r="9.5"/></svg>
+        <div><b>Ask Cairn anything</b><span>The box on Overview reads everything logged and answers with sources.</span></div>
+      </div>
+      <div class="tour-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 2 2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4Z"/></svg>
+        <div><b>Pin what matters</b><span>The star on any item keeps it at the top of Overview.</span></div>
+      </div>
+      <div class="tour-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19.4c0-3.3 2.8-5.6 6.2-5.6s6.2 2.3 6.2 5.6"/><circle cx="17.5" cy="8.6" r="2.5"/><path d="M15.8 13.9c2.6.3 4.4 2.2 4.4 5"/></svg>
+        <div><b>Invite your team</b><span>Your invite code is in Settings — share it, no email setup needed.</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary btn-block" id="tourGotIt">Got it</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ Command palette ============ -->
 <div class="cmdk-overlay hidden" id="cmdkOverlay">
   <div class="cmdk-box">
@@ -218,6 +249,6 @@
 
 <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
 <script src="config.js"></script>
-<script src="app.js?v=2" defer></script>
+<script src="app.js?v=3" defer></script>
 </body>
 </html>

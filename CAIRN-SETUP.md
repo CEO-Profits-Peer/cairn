@@ -14,6 +14,9 @@ einmal ausführen, dann weiter unten normal fortfahren (der Rest des Skripts ist
 alter table cairn_decisions
   add column if not exists type text not null default 'decision'
   check (type in ('decision','note','meeting','glossary','link'));
+
+alter table cairn_decisions
+  add column if not exists pinned boolean not null default false;
 ```
 
 ## 0. GitHub-Repo anlegen
@@ -76,6 +79,7 @@ create table if not exists cairn_decisions (
   reasoning text default '',
   category text default 'general',
   tags text[] not null default '{}',
+  pinned boolean not null default false,
   decided_on date not null default current_date,
   created_by uuid references auth.users(id),
   created_at timestamptz not null default now(),
@@ -193,20 +197,25 @@ create policy "delete decisions" on cairn_decisions
   for delete using (created_by = auth.uid() or is_cairn_owner(workspace_id));
 ```
 
-## 4. "Ask Cairn" (KI-Suche) aktivieren
+## 4. "Ask Cairn" (KI-Suche) aktivieren — läuft über Google Gemini (kostenlos)
 
-Zwei Dinge, sonst zeigt die App einen Hinweis statt einer Antwort (keine harte Fehlerseite):
+Bewusst Gemini statt Anthropic gewählt: Google bietet eine dauerhafte Gratis-Stufe
+(rate-limitiert, nicht pay-per-token) — für ein kleines Team, das gelegentlich fragt,
+bleibt das voraussichtlich für immer $0.
 
-1. In `api/ai-search.js` ganz oben `SUPABASE_URL` und `SUPABASE_ANON_KEY` eintragen —
+1. Kostenlosen API-Key auf [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+   holen (Google-Account, kein Zahlungsmittel nötig für die Free-Tier-Nutzung).
+2. In `api/ai-search.js` ganz oben `SUPABASE_URL` und `SUPABASE_ANON_KEY` eintragen —
    dieselben Werte wie in `config.js`. Der anon key ist bewusst öffentlich (das ist sein
    Zweck), Sicherheit kommt von RLS, nicht von Geheimhaltung dieses Keys.
-2. Vercel-Environment-Variable `ANTHROPIC_API_KEY` setzen — dein Anthropic-API-Key.
+3. Vercel-Environment-Variable `GEMINI_API_KEY` setzen — der Key aus Schritt 1.
    **Kein Service-Role-Key nötig** — `/api/ai-search` ruft Supabase mit dem JWT des
    eingeloggten Nutzers auf, RLS greift also ganz normal. Die KI sieht nie mehr, als der
    Nutzer selbst sehen dürfte.
 
-Nach dem Setzen: Redeploy anstoßen. Empfehlung wie bei HQ: Ausgabenlimit in der
-Anthropic Console setzen, sobald der Key aktiv ist.
+Nach dem Setzen: Redeploy anstoßen. Falls Google das Modell `gemini-2.0-flash` irgendwann
+umbenennt/einstellt: `GEMINI_MODEL`-Konstante ganz oben in `api/ai-search.js` anpassen
+(aktuelle Modellnamen stehen auf aistudio.google.com).
 
 ## 5. Deploy (Vercel)
 

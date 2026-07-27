@@ -35,6 +35,8 @@ body.app-body { overflow: hidden; }
   padding: 11px 13px; transition: border-color .2s ease, background .2s ease;
 }
 .field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+.field textarea.main { min-height: 160px; }
+.field textarea.small { min-height: 56px; }
 .field input:focus, .field textarea:focus, .field select:focus {
   outline: none; border-color: var(--accent); background: var(--surface-2);
 }
@@ -143,6 +145,15 @@ body.app-body { overflow: hidden; }
 .decision-title { font-size: 14.5px; font-weight: 600; margin-bottom: 4px; }
 .decision-context { font-size: 13.5px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .decision-meta { display: flex; align-items: center; gap: 8px; margin-top: 9px; flex-wrap: wrap; }
+.pin-btn {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 8px; border: 1px solid transparent;
+  background: none; color: var(--text-3); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: color .15s ease, background .15s ease;
+}
+.pin-btn svg { width: 16px; height: 16px; }
+.pin-btn:hover { color: var(--text-2); background: var(--surface-2); }
+.pin-btn.on { color: var(--accent-2); }
+.pin-btn.on:hover { color: var(--accent-2); }
 .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 500; padding: 3px 9px; border-radius: var(--r-pill); background: var(--surface-2); color: var(--text-2); border: 1px solid var(--line); }
 .badge.cat-product { color: #8fb8e0; }
 .badge.cat-pricing { color: #e0b98f; }
@@ -240,6 +251,13 @@ body.app-body { overflow: hidden; }
 .member-avatar { width: 32px; height: 32px; border-radius: 9px; background: var(--accent-bg); color: var(--accent-2); display: flex; align-items: center; justify-content: center; font-weight: 650; font-size: 13px; }
 .member-name { font-size: 14px; font-weight: 500; }
 .member-role { font-size: 12px; color: var(--text-3); margin-left: auto; }
+
+/* ---------- Quick tour ---------- */
+.tour-item { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.tour-item:last-child { border-bottom: none; }
+.tour-item svg { width: 20px; height: 20px; color: var(--accent-2); flex-shrink: 0; margin-top: 2px; }
+.tour-item b { display: block; font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
+.tour-item span { display: block; font-size: 13.5px; color: var(--text-2); line-height: 1.5; }
 
 /* ---------- Focus visibility for non-native interactive elements ---------- */
 .side-link:focus-visible, .decision-row:focus-visible, .ask-cite:focus-visible,

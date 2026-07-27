@@ -1,6 +1,8 @@
 /* ============================================================
    CAIRN — /api/ai-search
    Vercel Serverless Function (Node). Never runs in the browser.
+   Uses Google Gemini (free tier) rather than a pay-per-token API —
+   see CAIRN-SETUP.md section 4 for why.
 
    Security model: this function never uses a service-role key.
    It calls Supabase's REST API with the CALLER's OWN access
@@ -25,8 +27,8 @@ module.exports = async (req, res) => {
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
   if (!token) { res.status(401).json({ error: "Missing session." }); return; }
 
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  if (!anthropicKey || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
     res.status(500).json({ error: "Ask Cairn isn't configured yet (missing API key or Supabase URL in api/ai-search.js)." });
     return;
   }
@@ -62,27 +64,29 @@ module.exports = async (req, res) => {
       + "(the numbers of the items you actually used; if none, write SOURCES: none)\n\n"
       + "Items:\n" + context.slice(0, 14000);
 
-    const aiResp = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 500,
-        system,
-        messages: [{ role: "user", content: question }],
-      }),
-    });
+    // Google Gemini has a genuinely free tier (rate-limited, not pay-per-token),
+    // which is why this was switched from Anthropic. If Google renames/retires
+    // this model id later, update GEMINI_MODEL below (check aistudio.google.com).
+    const GEMINI_MODEL = "gemini-2.0-flash";
+    const aiResp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${geminiKey}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: system }] },
+          contents: [{ role: "user", parts: [{ text: question }] }],
+          generationConfig: { maxOutputTokens: 500 },
+        }),
+      }
+    );
     if (!aiResp.ok) {
       const errText = await aiResp.text().catch(() => "");
-      res.status(502).json({ error: "Anthropic request failed: " + errText.slice(0, 300) });
+      res.status(502).json({ error: "Gemini request failed: " + errText.slice(0, 300) });
       return;
     }
     const aiData = await aiResp.json();
-    let raw = (aiData.content || []).map((b) => b.text || "").join("").trim() || "No answer.";
+    let raw = (aiData.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim() || "No answer.";
 
     let citations = [];
     const match = raw.match(/SOURCES:\s*([0-9,\s]+|none)\s*$/i);

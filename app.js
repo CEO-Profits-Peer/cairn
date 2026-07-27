@@ -9,11 +9,11 @@ const CAT_LABEL = { general: 'General', product: 'Product', pricing: 'Pricing', 
 const TYPES = ['decision', 'note', 'meeting', 'glossary', 'link'];
 const TYPE_LABEL = { decision: 'Decision', note: 'Note', meeting: 'Meeting', glossary: 'Glossary', link: 'Link' };
 const TYPE_META = {
-  decision: { contextLabel: 'Context — what was the situation?', contextPh: 'What prompted this decision?', reasoningLabel: 'Reasoning — why this, and not something else?', reasoningPh: 'The actual reasoning — this is what future-you will search for', dateLabel: 'Date decided', titlePh: 'e.g. Switch to usage-based pricing', showCategory: true, showContext: true },
+  decision: { contextLabel: 'Context', contextPh: 'What prompted this? (optional)', reasoningLabel: 'Reasoning', reasoningPh: 'What did you decide, and why?', dateLabel: 'Date decided', titlePh: 'e.g. Switch to usage-based pricing', showCategory: true, showContext: true },
   note: { reasoningLabel: 'Note', reasoningPh: 'Whatever your team should remember — no wrong format', dateLabel: 'Date', titlePh: 'e.g. How our staging environment works', showCategory: false, showContext: false },
-  meeting: { contextLabel: 'Attendees', contextPh: 'Who was there?', reasoningLabel: 'Key points & follow-ups', reasoningPh: 'What was discussed, decided, or needs follow-up?', dateLabel: 'Meeting date', titlePh: 'e.g. Q3 roadmap sync', showCategory: false, showContext: true },
+  meeting: { contextLabel: 'Attendees', contextPh: 'Who was there? (optional)', reasoningLabel: 'Notes', reasoningPh: 'What was discussed, decided, or needs follow-up?', dateLabel: 'Meeting date', titlePh: 'e.g. Q3 roadmap sync', showCategory: false, showContext: true },
   glossary: { reasoningLabel: 'Definition', reasoningPh: 'What does this term mean, in your team\'s context?', dateLabel: 'Date added', titlePh: 'e.g. MRR', showCategory: false, showContext: false },
-  link: { contextLabel: 'URL', contextPh: 'https://...', reasoningLabel: 'Why it matters', reasoningPh: 'Why should the team care about this?', dateLabel: 'Date saved', titlePh: 'e.g. Competitor pricing page', showCategory: false, showContext: true },
+  link: { contextLabel: 'URL', contextPh: 'https://... (optional)', reasoningLabel: 'Why it matters', reasoningPh: 'Why should the team care about this?', dateLabel: 'Date saved', titlePh: 'e.g. Competitor pricing page', showCategory: false, showContext: true },
 };
 
 function esc(s) {
@@ -70,10 +70,10 @@ function seedDemo() {
       { id: 'm-jamie', name: 'Jamie Ruiz', role: 'member' },
     ],
     decisions: [
-      { id: uid(), type: 'decision', title: 'Switch to usage-based pricing', context: 'Flat pricing was under-charging our top 5% of accounts while over-charging casual users.', reasoning: 'Churn on the low end was 3x higher than on the high end. Usage-based pricing aligns cost with value and should reduce low-end churn while capturing more from power users.', category: 'pricing', tags: ['pricing', 'revenue'], decided_on: daysAgo(6), created_by: 'm-you' },
+      { id: uid(), type: 'decision', pinned: true, title: 'Switch to usage-based pricing', context: 'Flat pricing was under-charging our top 5% of accounts while over-charging casual users.', reasoning: 'Churn on the low end was 3x higher than on the high end. Usage-based pricing aligns cost with value and should reduce low-end churn while capturing more from power users.', category: 'pricing', tags: ['pricing', 'revenue'], decided_on: daysAgo(6), created_by: 'm-you' },
       { id: uid(), type: 'meeting', title: 'Q3 roadmap sync', context: 'You, Jamie', reasoning: 'Agreed to ship usage-based pricing before the mobile web revamp. Follow-up: Jamie to draft the migration email for existing flat-rate customers by Friday.', category: 'general', tags: ['roadmap'], decided_on: daysAgo(9), created_by: 'm-you' },
       { id: uid(), type: 'decision', title: 'Drop the mobile app, focus on web', context: 'Mobile app had <2% of weekly active users but consumed ~30% of engineering time.', reasoning: 'The ROI was clearly negative. We decided to sunset the app and invest that time into making the mobile web experience faster instead — same outcome, far less maintenance.', category: 'product', tags: ['mobile', 'roadmap'], decided_on: daysAgo(19), created_by: 'm-jamie' },
-      { id: uid(), type: 'glossary', title: 'NRR', context: '', reasoning: 'Net Revenue Retention — revenue from existing customers this month vs. the same customers last month, including upgrades, downgrades, and churn. Above 100% means expansion outpaces churn.', category: 'general', tags: ['finance'], decided_on: daysAgo(25), created_by: 'm-jamie' },
+      { id: uid(), type: 'glossary', pinned: true, title: 'NRR', context: '', reasoning: 'Net Revenue Retention — revenue from existing customers this month vs. the same customers last month, including upgrades, downgrades, and churn. Above 100% means expansion outpaces churn.', category: 'general', tags: ['finance'], decided_on: daysAgo(25), created_by: 'm-jamie' },
       { id: uid(), type: 'decision', title: 'Hire our first support person before a 2nd engineer', context: 'Support tickets were taking 2-3 hours a day away from the founders.', reasoning: 'Even though engineering velocity felt more urgent, the support backlog was directly costing us customers. A dedicated hire pays back faster here than another engineer would right now.', category: 'people', tags: ['hiring'], decided_on: daysAgo(33), created_by: 'm-you' },
       { id: uid(), type: 'link', title: 'Competitor pricing page — annual discount structure', context: 'https://example.com/pricing', reasoning: 'They give 20% off annual, we give 15%. Worth revisiting when we redo our own pricing page.', category: 'general', tags: ['pricing', 'research'], decided_on: daysAgo(37), created_by: 'm-you' },
       { id: uid(), type: 'decision', title: 'Move off the shared Postgres instance', context: 'Two noisy-neighbor incidents in one month caused visible slowdowns for customers.', reasoning: 'A dedicated instance costs more, but the incidents were starting to show up in churn surveys. Reliability wins over cost at our current stage.', category: 'ops', tags: ['infra', 'reliability'], decided_on: daysAgo(41), created_by: 'm-jamie' },
@@ -250,7 +250,18 @@ function showShell() {
   document.getElementById('wsMemberLabel').textContent = state.member.name;
   document.getElementById('wsAvatar').textContent = initials(state.workspace.name);
   navigate(location.hash.replace('#/', '') || 'overview');
+  if (!DEMO && !localStorage.getItem('cairn-tour-seen')) openTour();
 }
+
+/* ---------------- Quick tour ---------------- */
+function openTour() { document.getElementById('tourOverlay').classList.remove('hidden'); }
+function closeTour() {
+  document.getElementById('tourOverlay').classList.add('hidden');
+  localStorage.setItem('cairn-tour-seen', '1');
+}
+document.getElementById('tourClose').onclick = closeTour;
+document.getElementById('tourGotIt').onclick = closeTour;
+document.getElementById('tourOverlay').addEventListener('click', (e) => { if (e.target.id === 'tourOverlay') closeTour(); });
 
 /* ---------------- Auth screen wiring ---------------- */
 function switchAuthTab(which) {
@@ -362,6 +373,7 @@ function overviewViewHtml() {
   const thisMonth = state.decisions.filter(d => monthKey(d.decided_on) === monthKey(new Date().toISOString())).length;
   const typesUsed = new Set(state.decisions.map(d => d.type || 'decision')).size;
   const recent = state.decisions.slice(0, 6);
+  const pinned = state.decisions.filter(d => d.pinned);
 
   return `
     <div class="view-head">
@@ -386,6 +398,13 @@ function overviewViewHtml() {
       <div id="askResult"></div>
     </div>
 
+    ${pinned.length ? `
+      <div class="section-title">Pinned</div>
+      <div class="decision-list" id="pinnedList" style="margin-bottom:26px;">
+        ${pinned.map(decisionRowHtml).join('')}
+      </div>
+    ` : ''}
+
     <div class="section-title">Recently logged</div>
     <div class="decision-list" id="recentList">
       ${recent.length ? recent.map(decisionRowHtml).join('') : emptyStateHtml('overview')}
@@ -394,7 +413,8 @@ function overviewViewHtml() {
 }
 
 function bindOverviewView() {
-  document.querySelectorAll('#recentList .decision-row').forEach(el => el.onclick = () => openDecisionModal(findDecision(el.dataset.id)));
+  document.querySelectorAll('#recentList .decision-row, #pinnedList .decision-row').forEach(el => el.onclick = () => openDecisionModal(findDecision(el.dataset.id)));
+  bindPinButtons(document.getElementById('view'));
   const askBtn = document.getElementById('askBtn');
   const askInput = document.getElementById('askInput');
   const run = () => askCairnGo(askInput.value.trim());
@@ -460,6 +480,7 @@ function groupByMonth(list) {
 
 function bindDecisionsView() {
   document.querySelectorAll('#decisionGroups .decision-row').forEach(el => el.onclick = () => openDecisionModal(findDecision(el.dataset.id)));
+  bindPinButtons(document.getElementById('decisionGroups'));
   document.querySelectorAll('.pill-filter').forEach(el => el.onclick = () => { state.filter.cat = el.dataset.cat; render(); });
   const search = document.getElementById('decisionSearch');
   search.oninput = () => { state.filter.q = search.value; renderDecisionGroupsOnly(); };
@@ -475,6 +496,7 @@ function renderDecisionGroupsOnly() {
     </div>
   `).join('') : emptyStateHtml('decisions');
   document.querySelectorAll('#decisionGroups .decision-row').forEach(el => el.onclick = () => openDecisionModal(findDecision(el.dataset.id)));
+  bindPinButtons(document.getElementById('decisionGroups'));
 }
 
 function decisionRowHtml(d) {
@@ -482,6 +504,8 @@ function decisionRowHtml(d) {
   const preview = d.context || d.reasoning || '';
   const tags = (d.tags || []).slice(0, 3).map(t => `<span class="badge">${esc(t)}</span>`).join('');
   const catBadge = type === 'decision' ? `<span class="badge cat-${esc(d.category)}">${CAT_LABEL[d.category] || d.category}</span>` : '';
+  const authorName = authorOf(d);
+  const author = authorName ? `<span class="badge">by ${esc(authorName)}</span>` : '';
   return `
     <div class="decision-row" data-id="${esc(d.id)}" role="button" tabindex="0">
       <div class="decision-date">${fmtDate(d.decided_on)}</div>
@@ -492,10 +516,32 @@ function decisionRowHtml(d) {
           <span class="badge type-${esc(type)}">${TYPE_LABEL[type] || type}</span>
           ${catBadge}
           ${tags}
+          ${author}
         </div>
       </div>
+      <button class="pin-btn ${d.pinned ? 'on' : ''}" data-pin-id="${esc(d.id)}" title="${d.pinned ? 'Unpin' : 'Pin'}" aria-label="${d.pinned ? 'Unpin' : 'Pin'}">
+        <svg viewBox="0 0 24 24" fill="${d.pinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8"><path d="m12 2 2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4Z"/></svg>
+      </button>
     </div>
   `;
+}
+function authorOf(d) {
+  const m = state.members.find(x => x.user_id === d.created_by || x.id === d.created_by);
+  return m ? m.name : '';
+}
+async function togglePinned(id) {
+  const d = findDecision(id);
+  if (!d) return;
+  const updated = await api.updateDecision(id, { pinned: !d.pinned });
+  const i = state.decisions.findIndex(x => x.id === id);
+  if (i > -1) state.decisions[i] = updated;
+  render();
+}
+function bindPinButtons(root) {
+  root.querySelectorAll('.pin-btn').forEach(el => el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePinned(el.dataset.pinId);
+  }));
 }
 
 function emptyStateHtml(kind) {
@@ -540,11 +586,28 @@ function settingsViewHtml() {
     <div class="field" style="max-width:320px;"><label>Display name</label><input type="text" id="myNameInput" value="${esc(state.member.name)}"></div>
     <button class="btn btn-primary btn-sm" id="saveNameBtn" style="margin-bottom:26px;">Save</button>
 
+    <div class="section-title" style="margin-top:26px;">Your data</div>
+    <p style="font-size:13.5px; color:var(--text-2); max-width:420px; margin:0 0 12px;">Everything you've logged, as a JSON file — yours to keep, no lock-in.</p>
+    <button class="btn btn-ghost btn-sm" id="exportBtn" style="margin-bottom:26px;">Export all data</button>
+
     <div class="section-title">Account</div>
-    <button class="btn btn-ghost" id="signOutBtn">Sign out</button>
+    <button class="btn btn-ghost" id="signOutBtn" style="margin-right:10px;">Sign out</button>
+    <button class="btn btn-ghost" id="showTourBtn">Show quick tour</button>
   `;
 }
 function bindSettingsView() {
+  document.getElementById('exportBtn').onclick = () => {
+    const payload = { workspace: state.workspace.name, exported_at: new Date().toISOString(), items: state.decisions };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cairn-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Export downloaded');
+  };
+  document.getElementById('showTourBtn').onclick = () => openTour();
   document.getElementById('copyCodeBtn').onclick = () => {
     navigator.clipboard?.writeText(state.workspace.invite_code);
     toast('Invite code copied');
