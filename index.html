@@ -8,39 +8,45 @@
 <link rel="icon" href="assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body class="reveal-ready">
 
-<div class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="#" class="logo"><img src="assets/logo.svg" alt="" width="26" height="26"><span class="logo-word">Cairn</span></a>
-    <div class="nav-links">
+<div class="site">
+  <aside class="site-nav" id="siteNav">
+    <a href="#overview" class="logo"><img src="assets/logo.svg" alt="" width="24" height="24"><span class="logo-word">Cairn</span></a>
+    <nav class="site-links">
+      <a href="#overview" data-sec="overview" class="on">Overview</a>
+      <a href="#how" data-sec="how">How it works</a>
+      <a href="#features" data-sec="features">Features</a>
+      <a href="#pricing" data-sec="pricing">Pricing</a>
+    </nav>
+    <div class="site-nav-foot">
+      <a href="app.html" class="btn btn-ghost btn-sm btn-block">Sign in</a>
+      <a href="app.html?signup=1" class="btn btn-primary btn-sm btn-block">Start free</a>
+    </div>
+  </aside>
+
+  <div class="site-main">
+    <div class="site-mobile-bar">
+      <a href="#overview" class="logo"><img src="assets/logo.svg" alt="" width="22" height="22"><span class="logo-word">Cairn</span></a>
+      <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="mobile-close" id="mobileClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <a href="#overview">Overview</a>
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
+      <a href="app.html" class="btn btn-ghost" style="margin-top:20px;">Sign in</a>
+      <a href="app.html?signup=1" class="btn btn-primary">Start free</a>
     </div>
-    <div class="nav-right">
-      <a href="app.html" class="btn btn-ghost btn-sm">Sign in</a>
-      <a href="app.html?signup=1" class="btn btn-primary btn-sm">Start free</a>
-      <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</div>
 
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose" aria-label="Close">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg>
-  </button>
-  <a href="#how">How it works</a>
-  <a href="#features">Features</a>
-  <a href="#pricing">Pricing</a>
-  <a href="app.html" class="btn btn-ghost" style="margin-top:20px;">Sign in</a>
-  <a href="app.html?signup=1" class="btn btn-primary">Start free</a>
-</div>
-
-<header class="hero">
+    <header class="hero" id="overview" data-sec="overview">
   <div class="hero-grid"></div>
   <div class="container">
     <div class="hero-inner">
@@ -54,25 +60,53 @@
       <p class="hero-note" data-reveal class="d3">No credit card. 2 minutes to set up. Built for teams of 2–20.</p>
     </div>
 
-    <div class="ask-preview" data-reveal class="d3">
-      <div class="ask-preview-q">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 17h.01"/><path d="M9.1 9a2.9 2.9 0 0 1 5.6 1c0 1.9-2.7 2.3-2.7 4.2"/><circle cx="12" cy="12" r="9.5"/></svg>
-        <span>Why did we move off the flat pricing model?</span>
+    <div class="browser-frame" data-reveal class="d3">
+      <div class="browser-frame-bar">
+        <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+        <span class="browser-frame-url">cairn.app/app#/overview</span>
       </div>
-      <div class="ask-preview-a">
-        You switched to usage-based pricing in <b>March</b> because flat pricing under-charged
-        your top 5% of accounts while over-charging casual users — churn on the low end
-        was 3× higher than on the high end.
-        <div>
-          <span class="ask-preview-cite"><span class="dot"></span>Pricing model change — Mar 12</span>
-          <span class="ask-preview-cite"><span class="dot"></span>Churn review Q1 — Mar 3</span>
+      <div class="browser-frame-body">
+        <div class="stat-grid">
+          <div class="stat-card"><div class="n">8</div><div class="l">Decisions logged</div></div>
+          <div class="stat-card"><div class="n">2</div><div class="l">This month</div></div>
+          <div class="stat-card"><div class="n">5</div><div class="l">Categories</div></div>
+          <div class="stat-card"><div class="n">2</div><div class="l">Members</div></div>
+        </div>
+        <div class="ask-box">
+          <div class="ask-box-head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 17h.01"/><path d="M9.1 9a2.9 2.9 0 0 1 5.6 1c0 1.9-2.7 2.3-2.7 4.2"/><circle cx="12" cy="12" r="9.5"/></svg>
+            <span>Ask Cairn</span>
+          </div>
+          <div class="ask-answer">
+            You switched to usage-based pricing in <b>March</b> because flat pricing under-charged
+            your top 5% of accounts — churn on the low end was 3× higher than on the high end.
+            <div class="ask-cites">
+              <span class="ask-cite"><span class="dot"></span>Pricing model change — Mar 12</span>
+            </div>
+          </div>
+        </div>
+        <div class="decision-list">
+          <div class="decision-row">
+            <div class="decision-date">Jul 20</div>
+            <div class="decision-body">
+              <div class="decision-title">Switch to usage-based pricing</div>
+              <div class="decision-meta"><span class="badge cat-pricing">Pricing</span></div>
+            </div>
+          </div>
+          <div class="decision-row">
+            <div class="decision-date">Jul 7</div>
+            <div class="decision-body">
+              <div class="decision-title">Drop the mobile app, focus on web</div>
+              <div class="decision-meta"><span class="badge cat-product">Product</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
 
-<section id="problem">
+<section id="problem" data-sec="overview">
   <div class="container">
     <div class="section-head" data-reveal>
       <div class="eyebrow"><span class="dot"></span> The problem</div>
@@ -101,7 +135,7 @@
   </div>
 </section>
 
-<section id="how" style="background:var(--bg-soft);">
+<section id="how" data-sec="how" style="background:var(--bg-soft);">
   <div class="container">
     <div class="section-head" data-reveal>
       <div class="eyebrow"><span class="dot"></span> How it works</div>
@@ -128,7 +162,7 @@
   </div>
 </section>
 
-<section id="features">
+<section id="features" data-sec="features">
   <div class="container">
     <div class="section-head" data-reveal>
       <div class="eyebrow"><span class="dot"></span> Features</div>
@@ -165,7 +199,7 @@
   </div>
 </section>
 
-<section id="pricing" style="background:var(--bg-soft);">
+<section id="pricing" data-sec="pricing" style="background:var(--bg-soft);">
   <div class="container">
     <div class="section-head" data-reveal>
       <div class="eyebrow"><span class="dot"></span> Pricing</div>
@@ -216,7 +250,9 @@
     <div class="footer-note">A SP Industries product.</div>
   </div>
 </footer>
+  </div>
+</div>
 
-<script src="assets/landing.js?v=1"></script>
+<script src="assets/landing.js?v=2"></script>
 </body>
 </html>

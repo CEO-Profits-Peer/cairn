@@ -12,8 +12,8 @@
 
 // Same values as config.js — the anon key is public by design (RLS is
 // what actually protects the data), so it's fine to hardcode it here too.
-const SUPABASE_URL = "";
-const SUPABASE_ANON_KEY = "";
+const SUPABASE_URL = "https://renvvrnekmxicfpigabd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Bp71EC1xLImpn4gd4y9baw_mK8dnpPC";
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
