@@ -4,8 +4,17 @@
 
 const qs = new URLSearchParams(location.search);
 const DEMO = qs.has('demo');
-const CATS = ['general', 'product', 'pricing', 'people', 'ops', 'finance'];
 const CAT_LABEL = { general: 'General', product: 'Product', pricing: 'Pricing', people: 'People', ops: 'Ops', finance: 'Finance' };
+
+const TYPES = ['decision', 'note', 'meeting', 'glossary', 'link'];
+const TYPE_LABEL = { decision: 'Decision', note: 'Note', meeting: 'Meeting', glossary: 'Glossary', link: 'Link' };
+const TYPE_META = {
+  decision: { contextLabel: 'Context — what was the situation?', contextPh: 'What prompted this decision?', reasoningLabel: 'Reasoning — why this, and not something else?', reasoningPh: 'The actual reasoning — this is what future-you will search for', dateLabel: 'Date decided', titlePh: 'e.g. Switch to usage-based pricing', showCategory: true, showContext: true },
+  note: { reasoningLabel: 'Note', reasoningPh: 'Whatever your team should remember — no wrong format', dateLabel: 'Date', titlePh: 'e.g. How our staging environment works', showCategory: false, showContext: false },
+  meeting: { contextLabel: 'Attendees', contextPh: 'Who was there?', reasoningLabel: 'Key points & follow-ups', reasoningPh: 'What was discussed, decided, or needs follow-up?', dateLabel: 'Meeting date', titlePh: 'e.g. Q3 roadmap sync', showCategory: false, showContext: true },
+  glossary: { reasoningLabel: 'Definition', reasoningPh: 'What does this term mean, in your team\'s context?', dateLabel: 'Date added', titlePh: 'e.g. MRR', showCategory: false, showContext: false },
+  link: { contextLabel: 'URL', contextPh: 'https://...', reasoningLabel: 'Why it matters', reasoningPh: 'Why should the team care about this?', dateLabel: 'Date saved', titlePh: 'e.g. Competitor pricing page', showCategory: false, showContext: true },
+};
 
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -61,14 +70,18 @@ function seedDemo() {
       { id: 'm-jamie', name: 'Jamie Ruiz', role: 'member' },
     ],
     decisions: [
-      { id: uid(), title: 'Switch to usage-based pricing', context: 'Flat pricing was under-charging our top 5% of accounts while over-charging casual users.', reasoning: 'Churn on the low end was 3x higher than on the high end. Usage-based pricing aligns cost with value and should reduce low-end churn while capturing more from power users.', category: 'pricing', tags: ['pricing', 'revenue'], decided_on: daysAgo(6), created_by: 'm-you' },
-      { id: uid(), title: 'Drop the mobile app, focus on web', context: 'Mobile app had <2% of weekly active users but consumed ~30% of engineering time.', reasoning: 'The ROI was clearly negative. We decided to sunset the app and invest that time into making the mobile web experience faster instead — same outcome, far less maintenance.', category: 'product', tags: ['mobile', 'roadmap'], decided_on: daysAgo(19), created_by: 'm-jamie' },
-      { id: uid(), title: 'Hire our first support person before a 2nd engineer', context: 'Support tickets were taking 2-3 hours a day away from the founders.', reasoning: 'Even though engineering velocity felt more urgent, the support backlog was directly costing us customers. A dedicated hire pays back faster here than another engineer would right now.', category: 'people', tags: ['hiring'], decided_on: daysAgo(33), created_by: 'm-you' },
-      { id: uid(), title: 'Move off the shared Postgres instance', context: 'Two noisy-neighbor incidents in one month caused visible slowdowns for customers.', reasoning: 'A dedicated instance costs more, but the incidents were starting to show up in churn surveys. Reliability wins over cost at our current stage.', category: 'ops', tags: ['infra', 'reliability'], decided_on: daysAgo(41), created_by: 'm-jamie' },
-      { id: uid(), title: 'Extend runway by cutting the conference budget', context: 'Q2 burn was 18% over plan, mostly from event sponsorships with unclear ROI.', reasoning: 'None of the three conferences we sponsored last year produced a traceable customer. Cutting this extends runway by roughly 2 months without touching headcount.', category: 'finance', tags: ['budget'], decided_on: daysAgo(58), created_by: 'm-you' },
-      { id: uid(), title: 'Rename the "Projects" feature to "Workspaces"', context: 'User interviews showed people confused our "Projects" with their own client projects.', reasoning: '"Workspaces" tested clearly better in 6 of 7 interviews and matches language competitors already use, so there is no re-learning cost for switchers.', category: 'product', tags: ['naming', 'ux'], decided_on: daysAgo(72), created_by: 'm-you' },
-      { id: uid(), title: 'No more Friday deploys', context: 'Two of our last three production incidents happened from Friday afternoon deploys.', reasoning: 'The cost of a weekend incident with a skeleton crew outweighs the benefit of shipping a few hours earlier. Deploys freeze Friday noon onward.', category: 'ops', tags: ['process'], decided_on: daysAgo(95), created_by: 'm-jamie' },
-      { id: uid(), title: 'Keep the free tier instead of a trial', context: 'Considered switching to a 14-day trial to boost paid conversion.', reasoning: 'A free tier keeps top-of-funnel word-of-mouth alive, which is our biggest acquisition channel. We would rather optimize upgrade prompts than remove the free tier.', category: 'pricing', tags: ['pricing', 'growth'], decided_on: daysAgo(120), created_by: 'm-you' },
+      { id: uid(), type: 'decision', title: 'Switch to usage-based pricing', context: 'Flat pricing was under-charging our top 5% of accounts while over-charging casual users.', reasoning: 'Churn on the low end was 3x higher than on the high end. Usage-based pricing aligns cost with value and should reduce low-end churn while capturing more from power users.', category: 'pricing', tags: ['pricing', 'revenue'], decided_on: daysAgo(6), created_by: 'm-you' },
+      { id: uid(), type: 'meeting', title: 'Q3 roadmap sync', context: 'You, Jamie', reasoning: 'Agreed to ship usage-based pricing before the mobile web revamp. Follow-up: Jamie to draft the migration email for existing flat-rate customers by Friday.', category: 'general', tags: ['roadmap'], decided_on: daysAgo(9), created_by: 'm-you' },
+      { id: uid(), type: 'decision', title: 'Drop the mobile app, focus on web', context: 'Mobile app had <2% of weekly active users but consumed ~30% of engineering time.', reasoning: 'The ROI was clearly negative. We decided to sunset the app and invest that time into making the mobile web experience faster instead — same outcome, far less maintenance.', category: 'product', tags: ['mobile', 'roadmap'], decided_on: daysAgo(19), created_by: 'm-jamie' },
+      { id: uid(), type: 'glossary', title: 'NRR', context: '', reasoning: 'Net Revenue Retention — revenue from existing customers this month vs. the same customers last month, including upgrades, downgrades, and churn. Above 100% means expansion outpaces churn.', category: 'general', tags: ['finance'], decided_on: daysAgo(25), created_by: 'm-jamie' },
+      { id: uid(), type: 'decision', title: 'Hire our first support person before a 2nd engineer', context: 'Support tickets were taking 2-3 hours a day away from the founders.', reasoning: 'Even though engineering velocity felt more urgent, the support backlog was directly costing us customers. A dedicated hire pays back faster here than another engineer would right now.', category: 'people', tags: ['hiring'], decided_on: daysAgo(33), created_by: 'm-you' },
+      { id: uid(), type: 'link', title: 'Competitor pricing page — annual discount structure', context: 'https://example.com/pricing', reasoning: 'They give 20% off annual, we give 15%. Worth revisiting when we redo our own pricing page.', category: 'general', tags: ['pricing', 'research'], decided_on: daysAgo(37), created_by: 'm-you' },
+      { id: uid(), type: 'decision', title: 'Move off the shared Postgres instance', context: 'Two noisy-neighbor incidents in one month caused visible slowdowns for customers.', reasoning: 'A dedicated instance costs more, but the incidents were starting to show up in churn surveys. Reliability wins over cost at our current stage.', category: 'ops', tags: ['infra', 'reliability'], decided_on: daysAgo(41), created_by: 'm-jamie' },
+      { id: uid(), type: 'note', title: 'How our staging environment works', context: '', reasoning: 'staging.internal mirrors prod nightly at 3am UTC. Seed data resets on every deploy — do not rely on manually-entered staging data surviving a deploy.', category: 'general', tags: ['infra'], decided_on: daysAgo(50), created_by: 'm-jamie' },
+      { id: uid(), type: 'decision', title: 'Extend runway by cutting the conference budget', context: 'Q2 burn was 18% over plan, mostly from event sponsorships with unclear ROI.', reasoning: 'None of the three conferences we sponsored last year produced a traceable customer. Cutting this extends runway by roughly 2 months without touching headcount.', category: 'finance', tags: ['budget'], decided_on: daysAgo(58), created_by: 'm-you' },
+      { id: uid(), type: 'decision', title: 'Rename the "Projects" feature to "Workspaces"', context: 'User interviews showed people confused our "Projects" with their own client projects.', reasoning: '"Workspaces" tested clearly better in 6 of 7 interviews and matches language competitors already use, so there is no re-learning cost for switchers.', category: 'product', tags: ['naming', 'ux'], decided_on: daysAgo(72), created_by: 'm-you' },
+      { id: uid(), type: 'decision', title: 'No more Friday deploys', context: 'Two of our last three production incidents happened from Friday afternoon deploys.', reasoning: 'The cost of a weekend incident with a skeleton crew outweighs the benefit of shipping a few hours earlier. Deploys freeze Friday noon onward.', category: 'ops', tags: ['process'], decided_on: daysAgo(95), created_by: 'm-jamie' },
+      { id: uid(), type: 'decision', title: 'Keep the free tier instead of a trial', context: 'Considered switching to a 14-day trial to boost paid conversion.', reasoning: 'A free tier keeps top-of-funnel word-of-mouth alive, which is our biggest acquisition channel. We would rather optimize upgrade prompts than remove the free tier.', category: 'pricing', tags: ['pricing', 'growth'], decided_on: daysAgo(120), created_by: 'm-you' },
     ],
   };
 }
@@ -100,7 +113,7 @@ const demoApi = {
       return { d, score };
     }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
     if (!scored.length) {
-      return { answer: "I couldn't find a decision related to that yet in this workspace. Log one and ask again.", citations: [] };
+      return { answer: "I couldn't find anything related to that yet in this workspace. Log it and ask again.", citations: [] };
     }
     const top = scored.slice(0, 2).map(x => x.d);
     const answer = top.map(d => `**${d.title}** (${fmtDate(d.decided_on)}): ${d.reasoning}`).join('\n\n');
@@ -328,7 +341,7 @@ function navigate(view) {
   location.hash = '#/' + view;
   document.querySelectorAll('.side-link').forEach(el => el.classList.toggle('on', el.dataset.view === view));
   document.querySelectorAll('.mobile-tabbar button').forEach(el => el.classList.toggle('on', el.dataset.view === view));
-  document.getElementById('viewTitle').textContent = { overview: 'Overview', decisions: 'Decisions', settings: 'Settings' }[view] || 'Overview';
+  document.getElementById('viewTitle').textContent = { overview: 'Overview', decisions: 'Memory', settings: 'Settings' }[view] || 'Overview';
   render();
 }
 window.addEventListener('hashchange', () => {
@@ -347,17 +360,17 @@ function render() {
 function overviewViewHtml() {
   const total = state.decisions.length;
   const thisMonth = state.decisions.filter(d => monthKey(d.decided_on) === monthKey(new Date().toISOString())).length;
-  const cats = new Set(state.decisions.map(d => d.category)).size;
+  const typesUsed = new Set(state.decisions.map(d => d.type || 'decision')).size;
   const recent = state.decisions.slice(0, 6);
 
   return `
     <div class="view-head">
-      <div><h1>Overview</h1><p>Your team's decision memory at a glance.</p></div>
+      <div><h1>Overview</h1><p>Your team's memory at a glance.</p></div>
     </div>
     <div class="stat-grid">
-      <div class="stat-card"><div class="n">${total}</div><div class="l">Decisions logged</div></div>
+      <div class="stat-card"><div class="n">${total}</div><div class="l">Items logged</div></div>
       <div class="stat-card"><div class="n">${thisMonth}</div><div class="l">This month</div></div>
-      <div class="stat-card"><div class="n">${cats}</div><div class="l">Active categories</div></div>
+      <div class="stat-card"><div class="n">${typesUsed}</div><div class="l">Types in use</div></div>
       <div class="stat-card"><div class="n">${state.members.length}</div><div class="l">Team members</div></div>
     </div>
 
@@ -367,13 +380,13 @@ function overviewViewHtml() {
         <span>Ask Cairn</span>
       </div>
       <div class="ask-input-row">
-        <input type="text" id="askInput" placeholder="Why did we...?">
+        <input type="text" id="askInput" placeholder="Why did we...? What does... mean? Who was in...?">
         <button class="btn btn-primary" id="askBtn">Ask</button>
       </div>
       <div id="askResult"></div>
     </div>
 
-    <div class="section-title">Recent decisions</div>
+    <div class="section-title">Recently logged</div>
     <div class="decision-list" id="recentList">
       ${recent.length ? recent.map(decisionRowHtml).join('') : emptyStateHtml('overview')}
     </div>
@@ -410,14 +423,14 @@ function decisionsViewHtml() {
   const groups = groupByMonth(filtered);
   return `
     <div class="view-head">
-      <div><h1>Decisions</h1><p>${state.decisions.length} logged in total.</p></div>
+      <div><h1>Memory</h1><p>${state.decisions.length} items logged in total.</p></div>
     </div>
     <div class="field" style="max-width:360px;">
-      <input type="text" id="decisionSearch" placeholder="Search title, context, tags..." value="${esc(state.filter.q)}">
+      <input type="text" id="decisionSearch" placeholder="Search title, content, tags..." value="${esc(state.filter.q)}">
     </div>
     <div class="filter-row">
       <button class="pill-filter ${state.filter.cat === 'all' ? 'on' : ''}" data-cat="all">All</button>
-      ${CATS.map(c => `<button class="pill-filter ${state.filter.cat === c ? 'on' : ''}" data-cat="${c}">${CAT_LABEL[c]}</button>`).join('')}
+      ${TYPES.map(t => `<button class="pill-filter ${state.filter.cat === t ? 'on' : ''}" data-cat="${t}">${TYPE_LABEL[t]}</button>`).join('')}
     </div>
     <div id="decisionGroups">
       ${groups.length ? groups.map(g => `
@@ -432,7 +445,7 @@ function decisionsViewHtml() {
 
 function filteredDecisions() {
   let list = state.decisions;
-  if (state.filter.cat !== 'all') list = list.filter(d => d.category === state.filter.cat);
+  if (state.filter.cat !== 'all') list = list.filter(d => (d.type || 'decision') === state.filter.cat);
   if (state.filter.q) {
     const q = state.filter.q.toLowerCase();
     list = list.filter(d => (d.title + ' ' + d.context + ' ' + d.reasoning + ' ' + (d.tags || []).join(' ')).toLowerCase().includes(q));
@@ -465,15 +478,19 @@ function renderDecisionGroupsOnly() {
 }
 
 function decisionRowHtml(d) {
+  const type = d.type || 'decision';
+  const preview = d.context || d.reasoning || '';
   const tags = (d.tags || []).slice(0, 3).map(t => `<span class="badge">${esc(t)}</span>`).join('');
+  const catBadge = type === 'decision' ? `<span class="badge cat-${esc(d.category)}">${CAT_LABEL[d.category] || d.category}</span>` : '';
   return `
     <div class="decision-row" data-id="${esc(d.id)}" role="button" tabindex="0">
       <div class="decision-date">${fmtDate(d.decided_on)}</div>
       <div class="decision-body">
         <div class="decision-title">${esc(d.title)}</div>
-        <div class="decision-context">${esc(d.context)}</div>
+        <div class="decision-context">${esc(preview)}</div>
         <div class="decision-meta">
-          <span class="badge cat-${esc(d.category)}">${CAT_LABEL[d.category] || d.category}</span>
+          <span class="badge type-${esc(type)}">${TYPE_LABEL[type] || type}</span>
+          ${catBadge}
           ${tags}
         </div>
       </div>
@@ -486,9 +503,9 @@ function emptyStateHtml(kind) {
   return `
     <div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
-      <h3>${isSearch ? 'No matches' : 'No decisions yet'}</h3>
-      <p>${isSearch ? 'Try a different search or category.' : 'Log your first decision — it takes about 30 seconds.'}</p>
-      ${isSearch ? '' : '<button class="btn btn-primary" onclick="openDecisionModal(null)">New decision</button>'}
+      <h3>${isSearch ? 'No matches' : 'Nothing logged yet'}</h3>
+      <p>${isSearch ? 'Try a different search or type.' : 'Log your first decision, note, meeting, term, or link — it takes about 30 seconds.'}</p>
+      ${isSearch ? '' : '<button class="btn btn-primary" onclick="openDecisionModal(null)">New item</button>'}
     </div>
   `;
 }
@@ -545,16 +562,36 @@ let modalTags = [];
 let editingId = null;
 const overlay = document.getElementById('decisionModalOverlay');
 
+function applyTypeUI(type) {
+  const meta = TYPE_META[type] || TYPE_META.decision;
+  const modalTypeName = type === 'glossary' ? 'glossary term' : TYPE_LABEL[type].toLowerCase();
+  document.getElementById('decisionModalTitle').textContent = (editingId ? 'Edit ' : 'New ') + modalTypeName;
+  document.getElementById('dTitleLabel').textContent = type === 'glossary' ? 'Term' : 'Title';
+  document.getElementById('dTitle').placeholder = meta.titlePh;
+  document.getElementById('dContextField').style.display = meta.showContext ? 'block' : 'none';
+  if (meta.showContext) {
+    document.getElementById('dContextLabel').textContent = meta.contextLabel;
+    document.getElementById('dContext').placeholder = meta.contextPh;
+  }
+  document.getElementById('dReasoningLabel').textContent = meta.reasoningLabel;
+  document.getElementById('dReasoning').placeholder = meta.reasoningPh;
+  document.getElementById('dCategoryField').style.display = meta.showCategory ? 'block' : 'none';
+  document.getElementById('dDateLabel').textContent = meta.dateLabel;
+}
+document.getElementById('dType').addEventListener('change', (e) => applyTypeUI(e.target.value));
+
 function openDecisionModal(d) {
   editingId = d ? d.id : null;
   modalTags = d ? [...(d.tags || [])] : [];
-  document.getElementById('decisionModalTitle').textContent = d ? 'Edit decision' : 'New decision';
+  const type = d ? (d.type || 'decision') : 'decision';
+  document.getElementById('dType').value = type;
   document.getElementById('dTitle').value = d ? d.title : '';
   document.getElementById('dContext').value = d ? d.context : '';
   document.getElementById('dReasoning').value = d ? d.reasoning : '';
   document.getElementById('dCategory').value = d ? d.category : 'general';
   document.getElementById('dDate').value = d ? d.decided_on : new Date().toISOString().slice(0, 10);
   document.getElementById('dDeleteBtn').style.display = d ? 'block' : 'none';
+  applyTypeUI(type);
   renderTags();
   overlay.classList.remove('hidden');
   setTimeout(() => document.getElementById('dTitle').focus(), 30);
@@ -594,6 +631,7 @@ document.getElementById('decisionSaveBtn').onclick = async () => {
   const title = document.getElementById('dTitle').value.trim();
   if (!title) { toast('Title is required'); return; }
   const payload = {
+    type: document.getElementById('dType').value,
     title,
     context: document.getElementById('dContext').value.trim(),
     reasoning: document.getElementById('dReasoning').value.trim(),

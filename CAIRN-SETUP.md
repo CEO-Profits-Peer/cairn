@@ -3,6 +3,19 @@
 ~15 Minuten. Danach läuft die App live auf einer echten URL mit echtem Supabase-Backend
 statt nur im lokalen Demo-Modus.
 
+## Migration (nur falls du das SQL schon einmal ausgeführt hast)
+
+Cairn speichert jetzt mehrere Gedächtnis-Typen (Decision/Note/Meeting/Glossary/Link),
+nicht nur Entscheidungen. Falls dein Supabase-Projekt schon existiert: im SQL Editor
+einmal ausführen, dann weiter unten normal fortfahren (der Rest des Skripts ist mit
+`create or replace`/`if not exists` sicher erneut ausführbar):
+
+```sql
+alter table cairn_decisions
+  add column if not exists type text not null default 'decision'
+  check (type in ('decision','note','meeting','glossary','link'));
+```
+
 ## 0. GitHub-Repo anlegen
 
 1. Auf [github.com/new](https://github.com/new) einloggen als `CEO-Profits-Peer`.
@@ -57,6 +70,7 @@ create table if not exists cairn_members (
 create table if not exists cairn_decisions (
   id uuid primary key default gen_random_uuid(),
   workspace_id uuid not null references cairn_workspaces(id) on delete cascade,
+  type text not null default 'decision' check (type in ('decision','note','meeting','glossary','link')),
   title text not null,
   context text default '',
   reasoning text default '',

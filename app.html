@@ -91,7 +91,7 @@
       </div>
       <div class="side-link" data-view="decisions" role="button" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
-        Decisions
+        Memory
       </div>
       <div class="side-link" data-view="settings" role="button" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l1.9-1.5-2-3.4-2.3.7a7.7 7.7 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.3a7.7 7.7 0 0 0-2.6 1.5l-2.3-.7-2 3.4L4.6 10.5a7.6 7.6 0 0 0 0 3l-1.9 1.5 2 3.4 2.3-.7c.77.66 1.65 1.18 2.6 1.5l.4 2.3h4l.4-2.3a7.7 7.7 0 0 0 2.6-1.5l2.3.7 2-3.4Z"/></svg>
@@ -141,7 +141,7 @@
       </button>
       <button data-view="decisions">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
-        Decisions
+        Memory
       </button>
       <button data-view="new">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
@@ -163,11 +163,21 @@
       <button class="modal-close" id="decisionModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body">
-      <div class="field"><label>Title</label><input type="text" id="dTitle" placeholder="e.g. Switch to usage-based pricing"></div>
-      <div class="field"><label>Context — what was the situation?</label><textarea id="dContext" placeholder="What prompted this decision?"></textarea></div>
-      <div class="field"><label>Reasoning — why this, and not something else?</label><textarea id="dReasoning" placeholder="The actual reasoning — this is what future-you will search for"></textarea></div>
+      <div class="field">
+        <label>Type</label>
+        <select id="dType">
+          <option value="decision">Decision</option>
+          <option value="note">Note</option>
+          <option value="meeting">Meeting</option>
+          <option value="glossary">Glossary term</option>
+          <option value="link">Link</option>
+        </select>
+      </div>
+      <div class="field"><label id="dTitleLabel">Title</label><input type="text" id="dTitle" placeholder="e.g. Switch to usage-based pricing"></div>
+      <div class="field" id="dContextField"><label id="dContextLabel">Context — what was the situation?</label><textarea id="dContext" placeholder="What prompted this decision?"></textarea></div>
+      <div class="field"><label id="dReasoningLabel">Reasoning — why this, and not something else?</label><textarea id="dReasoning" placeholder="The actual reasoning — this is what future-you will search for"></textarea></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-        <div class="field">
+        <div class="field" id="dCategoryField">
           <label>Category</label>
           <select id="dCategory">
             <option value="general">General</option>
@@ -178,7 +188,7 @@
             <option value="finance">Finance</option>
           </select>
         </div>
-        <div class="field"><label>Date decided</label><input type="date" id="dDate"></div>
+        <div class="field"><label id="dDateLabel">Date decided</label><input type="date" id="dDate"></div>
       </div>
       <div class="field">
         <label>Tags</label>
@@ -188,7 +198,7 @@
     <div class="modal-foot">
       <button class="btn btn-ghost foot-left" id="dDeleteBtn" style="display:none; color:var(--danger); border-color:rgba(217,105,90,.3);">Delete</button>
       <button class="btn btn-ghost" id="decisionCancelBtn">Cancel</button>
-      <button class="btn btn-primary" id="decisionSaveBtn">Save decision</button>
+      <button class="btn btn-primary" id="decisionSaveBtn">Save</button>
     </div>
   </div>
 </div>
@@ -198,7 +208,7 @@
   <div class="cmdk-box">
     <div class="cmdk-input-row">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="cmdkInput" placeholder="Search decisions, or ask a question...">
+      <input type="text" id="cmdkInput" placeholder="Search your memory...">
     </div>
     <div class="cmdk-results" id="cmdkResults"></div>
   </div>
@@ -208,6 +218,6 @@
 
 <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
 <script src="config.js"></script>
-<script src="app.js?v=1" defer></script>
+<script src="app.js?v=2" defer></script>
 </body>
 </html>

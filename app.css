@@ -150,6 +150,11 @@ body.app-body { overflow: hidden; }
 .badge.cat-ops { color: #9fd0b0; }
 .badge.cat-finance { color: #e09f9f; }
 .badge.cat-general { color: var(--text-2); }
+.badge.type-decision { color: var(--accent-2); border-color: rgba(193,127,74,.35); }
+.badge.type-note { color: #9fd0b0; }
+.badge.type-meeting { color: #8fb8e0; }
+.badge.type-glossary { color: #c79fe0; }
+.badge.type-link { color: #e0b98f; }
 
 .month-group { margin-bottom: 26px; }
 .month-label { font-size: 12.5px; font-weight: 650; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }

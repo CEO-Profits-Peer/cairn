@@ -38,28 +38,29 @@ module.exports = async (req, res) => {
 
     const userHeaders = { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + token };
     const decisionsResp = await fetch(
-      SUPABASE_URL + "/rest/v1/cairn_decisions?select=id,title,context,reasoning,category,tags,decided_on&order=decided_on.desc&limit=300",
+      SUPABASE_URL + "/rest/v1/cairn_decisions?select=id,type,title,context,reasoning,category,tags,decided_on&order=decided_on.desc&limit=300",
       { headers: userHeaders }
     );
     if (!decisionsResp.ok) { res.status(401).json({ error: "Session invalid or expired." }); return; }
     const decisions = await decisionsResp.json();
 
     if (!Array.isArray(decisions) || !decisions.length) {
-      res.status(200).json({ answer: "There are no decisions logged in this workspace yet.", citations: [] });
+      res.status(200).json({ answer: "There's nothing logged in this workspace yet.", citations: [] });
       return;
     }
 
     const numbered = decisions.map((d, i) => ({ n: i + 1, ...d }));
     const context = numbered.map((d) =>
-      `[${d.n}] ${d.title} (${d.decided_on}, ${d.category})\nContext: ${d.context || "-"}\nReasoning: ${d.reasoning || "-"}\nTags: ${(d.tags || []).join(", ") || "-"}`
+      `[${d.n}] (${d.type || "decision"}) ${d.title} — ${d.decided_on}\n${d.context ? "Context: " + d.context + "\n" : ""}Content: ${d.reasoning || "-"}\nTags: ${(d.tags || []).join(", ") || "-"}`
     ).join("\n\n");
 
-    const system = "You are Cairn, a search assistant over a small team's logged decisions. "
-      + "Answer the user's question using ONLY the decisions provided below — never invent a decision that isn't listed. "
-      + "If nothing relevant is in the list, say so plainly instead of guessing. Be concise (2-4 sentences). "
+    const system = "You are Cairn, a search assistant over a small team's memory — a mix of logged decisions, "
+      + "notes, meeting notes, glossary terms, and links. Answer the user's question using ONLY the items provided "
+      + "below — never invent one that isn't listed. If nothing relevant is in the list, say so plainly instead of "
+      + "guessing. Be concise (2-4 sentences). "
       + "End your reply with one extra line in this exact format, with no other text on it: SOURCES: n,n,n "
-      + "(the numbers of the decisions you actually used; if none, write SOURCES: none)\n\n"
-      + "Decisions:\n" + context.slice(0, 14000);
+      + "(the numbers of the items you actually used; if none, write SOURCES: none)\n\n"
+      + "Items:\n" + context.slice(0, 14000);
 
     const aiResp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
