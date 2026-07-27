@@ -17,6 +17,10 @@ alter table cairn_decisions
 
 alter table cairn_decisions
   add column if not exists pinned boolean not null default false;
+
+drop policy if exists "owner removes member" on cairn_members;
+create policy "owner removes member" on cairn_members
+  for delete using (is_cairn_owner(workspace_id) and user_id <> auth.uid());
 ```
 
 ## 0. GitHub-Repo anlegen
@@ -177,6 +181,10 @@ create policy "update own member name" on cairn_members
 
 revoke update on cairn_members from authenticated, anon;
 grant update (name) on cairn_members to authenticated;
+
+drop policy if exists "owner removes member" on cairn_members;
+create policy "owner removes member" on cairn_members
+  for delete using (is_cairn_owner(workspace_id) and user_id <> auth.uid());
 
 -- Decisions: jedes Mitglied liest/schreibt, löschen darf der Ersteller
 -- oder der Owner des Workspace.

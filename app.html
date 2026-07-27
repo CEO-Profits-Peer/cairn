@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=4">
-<link rel="stylesheet" href="app.css?v=3">
+<link rel="stylesheet" href="app.css?v=4">
 </head>
 <body class="app-body">
 
@@ -112,7 +112,7 @@
   <div class="main">
     <div class="mobile-topbar">
       <div class="logo-mini"><img src="assets/logo.svg" width="20" height="20" alt=""><span>Cairn</span></div>
-      <button class="btn btn-ghost btn-sm" id="mobileSearchBtn">
+      <button class="btn btn-ghost btn-sm" id="mobileSearchBtn" aria-label="Search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       </button>
     </div>
@@ -160,7 +160,7 @@
   <div class="modal wide">
     <div class="modal-head">
       <h2 id="decisionModalTitle">New decision</h2>
-      <button class="modal-close" id="decisionModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <button class="modal-close" id="decisionModalClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="field">
@@ -208,7 +208,7 @@
   <div class="modal">
     <div class="modal-head">
       <h2>Welcome to Cairn</h2>
-      <button class="modal-close" id="tourClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <button class="modal-close" id="tourClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="tour-item">
@@ -249,6 +249,6 @@
 
 <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
 <script src="config.js"></script>
-<script src="app.js?v=3" defer></script>
+<script src="app.js?v=5" defer></script>
 </body>
 </html>

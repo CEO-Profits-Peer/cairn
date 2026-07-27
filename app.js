@@ -98,6 +98,7 @@ const demoApi = {
   async createWorkspace(name, memberName) { demo = seedDemo(); demo.workspace.name = name || demo.workspace.name; demo.member.name = memberName || demo.member.name; return demo.workspace; },
   async joinWorkspace() { demo = demo || seedDemo(); return demo.workspace; },
   async listMembers() { return demo.members; },
+  async removeMember(id) { demo.members = demo.members.filter(m => m.id !== id); },
   async listDecisions() { return [...demo.decisions].sort((a, b) => b.decided_on.localeCompare(a.decided_on)); },
   async createDecision(d) { const row = { ...d, id: uid(), created_by: 'm-you' }; demo.decisions.unshift(row); return row; },
   async updateDecision(id, patch) { const i = demo.decisions.findIndex(x => x.id === id); if (i > -1) demo.decisions[i] = { ...demo.decisions[i], ...patch }; return demo.decisions[i]; },
@@ -147,6 +148,10 @@ const supaApi = {
     const { data, error } = await sb.from('cairn_members').select('*').eq('workspace_id', wsId).order('created_at');
     if (error) throw error;
     return data;
+  },
+  async removeMember(id) {
+    const { error } = await sb.from('cairn_members').delete().eq('id', id);
+    if (error) throw error;
   },
   async listDecisions(wsId) {
     const { data, error } = await sb.from('cairn_decisions').select('*').eq('workspace_id', wsId).order('decided_on', { ascending: false });
@@ -578,6 +583,9 @@ function settingsViewHtml() {
           <div class="member-avatar">${esc(initials(m.name))}</div>
           <div class="member-name">${esc(m.name)}</div>
           <div class="member-role">${m.role === 'owner' ? 'Owner' : 'Member'}</div>
+          ${state.member.role === 'owner' && m.id !== state.member.id
+            ? `<button class="pin-btn" data-remove-member="${esc(m.id)}" title="Remove ${esc(m.name)}" aria-label="Remove ${esc(m.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`
+            : ''}
         </div>
       `).join('')}
     </div>
@@ -608,6 +616,26 @@ function bindSettingsView() {
     toast('Export downloaded');
   };
   document.getElementById('showTourBtn').onclick = () => openTour();
+  document.querySelectorAll('[data-remove-member]').forEach(el => el.onclick = async () => {
+    const id = el.dataset.removeMember;
+    const m = state.members.find(x => x.id === id);
+    if (!m) return;
+    if (!el.classList.contains('confirming')) {
+      el.classList.add('confirming');
+      el.innerHTML = '<span style="font-size:11.5px; padding:0 4px;">Confirm?</span>';
+      el.title = `Click again to remove ${m.name}`;
+      setTimeout(() => {
+        if (el.isConnected && el.classList.contains('confirming')) render();
+      }, 4000);
+      return;
+    }
+    try {
+      await api.removeMember(id);
+      state.members = state.members.filter(x => x.id !== id);
+      render();
+      toast(`${m.name} removed`);
+    } catch (err) { toast(err.message || 'Could not remove member.'); }
+  });
   document.getElementById('copyCodeBtn').onclick = () => {
     navigator.clipboard?.writeText(state.workspace.invite_code);
     toast('Invite code copied');
@@ -744,19 +772,21 @@ function cmdkResults(list) {
   cmdkMatches = list;
   cmdkActive = 0;
   const box = document.getElementById('cmdkResults');
-  if (!list.length) { box.innerHTML = `<div class="cmdk-empty">${cmdkInput.value ? 'No matching decisions' : 'Type to search decisions...'}</div>`; return; }
+  if (!list.length) { box.innerHTML = `<div class="cmdk-empty">${cmdkInput.value ? 'No matches' : 'Type to search your memory...'}</div>`; return; }
   box.innerHTML = list.map((d, i) => `
     <div class="cmdk-item ${i === 0 ? 'active' : ''}" data-i="${i}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5.3l3.6 2.1"/></svg>
       <span>${esc(d.title)}</span>
-      <span class="meta">${fmtDate(d.decided_on)}</span>
+      <span class="meta">${TYPE_LABEL[d.type || 'decision']} · ${fmtDate(d.decided_on)}</span>
     </div>
   `).join('');
   box.querySelectorAll('.cmdk-item').forEach(el => el.onclick = () => { openDecisionModal(cmdkMatches[+el.dataset.i]); closeCmdk(); });
 }
 cmdkInput.addEventListener('input', () => {
   const q = cmdkInput.value.trim().toLowerCase();
-  const list = !q ? [] : state.decisions.filter(d => (d.title + ' ' + d.tags.join(' ')).toLowerCase().includes(q)).slice(0, 8);
+  const list = !q ? [] : state.decisions.filter(d =>
+    (d.title + ' ' + (d.context || '') + ' ' + (d.reasoning || '') + ' ' + d.tags.join(' ')).toLowerCase().includes(q)
+  ).slice(0, 8);
   cmdkResults(list);
 });
 cmdkInput.addEventListener('keydown', (e) => {
