@@ -245,6 +245,7 @@ body.app-body { overflow: hidden; }
 
 /* ---------- Mobile ---------- */
 .mobile-topbar { display: none; }
+.mobile-tabbar { display: none; }
 @media (max-width: 860px) {
   .sidebar { display: none; }
   .shell { flex-direction: column; }
